@@ -1,0 +1,393 @@
+*,
+*:before,
+*:after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: "K2D","Readex Pro",sans-serif;
+    background-color: white;
+    width: 100vw;
+    height: 100vh;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
+img {
+    max-width: 100%;
+    width: 100%;
+    background-color: transparent;
+}
+
+button {
+    text-align: center;
+    color: #fff;
+    background-color: white;
+    padding: .8rem 2.5rem;
+    border: none;
+    border-radius: 100px;
+    cursor: pointer;
+    transition: var(--smooth);
+    box-shadow: 0 0 10px rgba(0, 0, 0, .3);
+}
+
+button:hover {
+    background-color: var(--darkblue);
+    transition: var(--smooth);
+}
+
+:root {
+    --blue-l: #43c4eb;
+    --blue: #00afef;
+    --darkblue: #225ba8;
+    --gray: #393939;
+    --gray-l: #d4d4d4;
+    --smooth: all .3s ease-in;
+}
+
+.container {
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 10px;
+}
+
+header {
+    position: absolute;
+    width: 100%;
+    top: 0;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 0;
+    align-items: center;
+}
+
+.navbar_links {
+    position: fixed;
+    top: 0;
+}
+
+/* ==header== */
+
+header {
+    position: absolute;
+    width: 100%;
+}
+
+/* ==logo== */
+.navbar_logo {
+    display: flex;
+    align-items: center;
+}
+
+.navbar_logo img {
+    width: 57px;
+    height: 57px;
+    object-fit: cover;
+    margin-right: 10px;
+}
+
+.navbar_logo h1 {
+    color: var(--darkblue);
+    font-size: 30px;
+    font-weight: 800;
+}
+
+/* ==menu== */
+.navbar_links {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 60%;
+    height: 100%;
+    background-color: var(--gray);
+    z-index: 5;
+    transition: var(--smooth);
+    transform: translateX(-100%);
+    opacity: 0;
+}
+
+.navbar_link {
+    list-style: none;
+    margin: 55px;
+    color: #fff;
+}
+
+.navbar_link a {
+    text-decoration: none;
+    color: #fff;
+    font-weight: 300;
+    transition: var(--smooth);
+}
+
+.navbar_links.navbar_open {
+    transform: translateX(0);
+    opacity: 1;
+    transition: var(--smooth);
+}
+
+.navbar_link a:hover {
+    color: var(--blue);
+    transition: var(--smooth);
+}
+
+.navbar_btn {
+    font-size: 1rem;
+    background-color: var(--blue);
+    margin-left: 45px;
+}
+
+.navbar_icons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 80px;
+    height: 80px;
+    cursor: pointer;
+    transition: var(--smooth);
+    z-index: 6;
+    margin-right:20px ;
+}
+
+.navbar_icon {
+    width: 45px;
+    height: 6px;
+    background-color: var(--gray);
+    border-radius: 5px;
+    transition: var(--smooth);
+    position: relative;
+}
+
+.navbar_icon:before,
+.navbar_icon:after {
+    content: "";
+    position: absolute;
+    width: 45px;
+    height: 6px;
+    background-color: var(--gray);
+    border-radius: 5px;
+    transition: var(--smooth);
+}
+
+.navbar_icon:before {
+    transform: translateY(-12px);
+}
+
+.navbar_icon:after {
+    transform: translateY(12px);
+}
+
+/* button animation */
+.open .navbar_icon {
+    transform: translateX(-50px);
+    background: transparent;
+}
+
+.open .navbar_icon:before {
+    transform: rotate(45deg) translate(35px, -35px);
+}
+
+.open .navbar_icon:after {
+    transform: rotate(-45deg) translate(35px, 35px);
+}
+
+@media (min-width: 62em) {
+    .navbar_links {
+        position: initial;
+        transform: translateX(0);
+        opacity: 1;
+        background-color: transparent;
+        display: flex;
+        justify-self: flex-end;
+        align-items: center;
+    }
+    .navbar_link a {
+        color: var(--gray);
+    }
+    .navbar_icons {
+        display: none;
+    }
+    .navbar_btn {
+        background-color: var(--blue);
+    }
+    .navbar_link {
+        color: var(--gray);
+    }
+}
+
+/* === Banner === */
+#banner {
+    position: relative;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+}
+
+.banner_img {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 35vh;
+    z-index: -1;
+}
+
+.banner_heading {
+    position: relative;
+    max-width: 300px;
+    margin: 0 auto;
+    text-align: center;
+    color: var(--gray);
+    z-index: 1;
+    padding-top: 8em;
+    margin-bottom: 0.8em;
+}
+
+.banner_heading h1 {
+    font-size: 2.25em;
+    padding-top: 4em;
+    margin-bottom: 0.8em;
+}
+
+.banner_heading p {
+    font-weight: 300;
+    line-height: 2em;
+    margin-bottom: 1.5em;
+}
+
+/* == Formbox == */
+
+.form_box_login {
+    position: relative;
+    width: 300px;
+    height: 380px;
+    background-color: var(--blue-l);
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+    border-radius: 14px;
+    margin: 0 auto;
+    box-shadow: 1.95px 1.95px 30px rgba(0, 0, 0, .5);
+    z-index: 2;
+}
+
+form {
+    left: 0;
+    width: 100%;
+}
+
+/* Đảm bảo tiêu đề "Login" hiển thị rõ trên nền xanh */
+.form_box_login h1 {
+    color: #fff;
+    font-size: 36px;
+    margin: 0 0 20px 0; /* Điều chỉnh khoảng cách cho hợp lý */
+}
+
+.input_box {
+    position: relative;
+    margin: 30px 0;
+}
+
+.input_box input {
+    width: 100%;
+    padding: 12px;
+    background-color: #fff;
+    border-radius: 3px;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    color: #333;
+    font-weight: 500;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
+}
+
+.input_box input::placeholder {
+    color: #888;
+    font-weight: 400;
+}
+
+.input_box input:focus {
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 175, 239, 0.5); /* Thêm hiệu ứng focus */
+}
+
+.input_box i {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px;
+    color: black;
+}
+
+.login_btn {
+    color: black;
+    font-weight: 900;
+    font-size: 1.1em;
+    width: 100%;
+}
+
+/* Kiểu cho liên kết "Forgot password?" */
+.forgot_link {
+    margin: -25px 0 15px;
+    text-align: left;
+}
+
+.forgot_link a {
+    color: #fff; /* Đổi màu thành trắng để nổi trên nền xanh */
+    text-decoration: none;
+    font-size: 14.5px;
+}
+
+.forgot_link a:hover { /* Hiệu ứng khi di chuột qua */
+    text-decoration: underline;
+    color: var(--darkblue); 
+}
+
+/* Kiểu cho phần "Don't have an account? Sign up" */
+.signup_link {
+    margin-top: 20px; /* Khoảng cách phía trên để tách khỏi nút Login */
+    text-align: center;
+}
+
+.signup_link p {
+    margin: 0;
+    color: #fff; /* Màu trắng cho văn bản */
+}
+
+.signup_link a {
+    color: #fff; /* Màu trắng cho liên kết */
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.signup_link a:hover {
+    text-decoration: underline; /* Hiệu ứng khi di chuột qua */
+    color: var(--darkblue);
+}
+
+@media (min-width: 62em) {
+    .banner_heading {
+        text-align: initial;
+        margin: 0;
+        padding-top: 0;
+    }
+    .banner_img {
+        width: 55vw;
+    }
+    .form_box_login {
+        position: absolute;
+        width: 400px;
+    }
+    .banner_heading h1 {
+        padding-top: 0;
+    }
+}
