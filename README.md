@@ -49,6 +49,6 @@ The project follows a clear separation of concerns:
 
 ## Default Login
 
-Username: test
-Email: test@example.com
-Password: password
+Username: test  
+Email: test@example.com  
+Password: password  
