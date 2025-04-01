@@ -1,22 +1,20 @@
 <?php
-include './php/connect.php';
-include './php/auth_check.php'; // Ensure user is logged in
+include './php/add_task_func.php';
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $title = $_POST['title'];
-    $description = $_POST['description'];
-    $priority = $_POST['priority'];
-    $deadline = $_POST['deadline'];
-    $tags = $_POST['tags'];
-    $user_id = $_SESSION['user_id'];
+// Fetch the count of existing tasks with the title "New task"
+$stmt = $conn->prepare("SELECT COUNT(*) FROM tasks WHERE title LIKE ? AND user_id = ?");
+$title_base = 'New task%';
+$stmt->bind_param("si", $title_base, $user_id);
+$stmt->execute();
+$stmt->bind_result($count);
+$stmt->fetch();
+$stmt->close();
 
-    $stmt = $conn->prepare("INSERT INTO tasks (title, description, priority, deadline, tags, user_id) VALUES (?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("sssssi", $title, $description, $priority, $deadline, $tags, $user_id);
-    $stmt->execute();
-    $stmt->close();
-
-    header("Location: ./dashboard.php");
-    exit();
+// Set the default title based on existing tasks
+if ($count > 0) {
+    $default_title = "New task (" . ($count) . ")";
+} else {
+    $default_title = "New task";
 }
 ?>
 
@@ -25,27 +23,84 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./css/dashboard.css">
+    <link rel="stylesheet" href="./css/dashboard.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="./css/task_form.css?v=<?php echo time(); ?>">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <title>Add Task</title>
+    <script src="./js/start_time.js?v=<?= time() ?>" defer></script>
+    <script src="./js/notifications.js?v=<?= time() ?>" defer></script>
 </head>
 <body>
-    <h2>Add New Task</h2>
-    <form method="POST" action="">
-        <label for="title">Title:</label>
-        <input type="text" name="title" required>
-        <label for="description">Description:</label>
-        <textarea name="description" required></textarea>
-        <label for="priority">Priority:</label>
-        <select name="priority" required>
-            <option value="Low">Low</option>
-            <option value="Medium">Medium</option>
-            <option value="High">High</option>
-        </select>
-        <label for="deadline">Deadline:</label>
-        <input type="date" name="deadline" required>
-        <label for="tags">Tags:</label>
-        <input type="text" name="tags">
-        <button type="submit">Add Task</button>
-    </form>
+    <?php include './php/sidebar.php'; ?>
+
+    <section class="home">
+        <div class="text">Add New Task</div>
+        <div class="container">
+<form method="POST" action="./add_task.php" class="task-form" onsubmit="return validateTask();">
+            <div class="form-group">
+                <label for="title">Title:</label>
+                <input type="text" name="title" value="<?= htmlspecialchars($default_title) ?>" required class="form-control">
+            </div>
+
+            <div class="form-group">
+                <label for="description">Description:</label>
+                <textarea name="description" class="form-control"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="priority">Priority:</label>
+                <select name="priority" required class="form-control">
+                    <option value="Low">Low</option>
+                    <option value="Medium">Medium</option>
+                    <option value="High">High</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="status">Status:</label>
+                <select name="status" required class="form-control">
+                    <option value="Pending">Pending</option>
+                    <option value="In Progress">In Progress</option>
+                    <option value="Completed">Completed</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="category_id">Category:</label>
+                <select name="category_id" class="form-control">
+                    <option value="">Select Category</option>
+                    <?php while ($category = $categories->fetch_assoc()): ?>
+                        <option value="<?= $category['id'] ?>" style="background: <?= $category['color'] ?>20; color: <?= $category['color'] ?>">
+                            <?= htmlspecialchars($category['category_name']) ?>
+                        </option>
+                    <?php endwhile; ?>
+                </select>
+                <a href="manage_categories.php" class="btn btn-secondary" style="margin-top: 10px; display: inline-block;">
+                    <i class='bx bx-category'></i> Manage Categories
+                </a>
+            </div>
+
+            <div class="form-group">
+                <label for="start_time">Start time:</label>
+                <input type="datetime-local" name="start_time" required class="form-control">
+            </div>
+
+            <div class="form-group">
+                <label for="duration">Duration (minutes):</label>
+                <input type="number" name="duration" value="<?= htmlspecialchars($prefilled_duration) ?>" min="1" required class="form-control">
+            </div>
+
+            <div class="form-group">
+                <label for="tags">Tags (comma separated):</label>
+                <input type="text" name="tags" class="form-control">
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Add Task</button>
+                <a href="dashboard.php" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</section>
 </body>
 </html>
