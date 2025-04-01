@@ -1,6 +1,6 @@
 # Personal Task Manager
 
-A comprehensive task management application for organizing personal and professional tasks.
+A website that helps organize time for work and activities in a convenient and quick way.
 
 ## Features
 
