@@ -43,11 +43,12 @@ The project follows a clear separation of concerns:
 
 ## Installation
 
-1. Import `sql/combined_project.sql` into your MySQL database
+1. Import `sql/task_manager.sql` into your MySQL database
 2. Configure database connection in `php/connect.php`
 3. Access the application through your web server
 
 ## Default Login
 
-Username: test_user
+Username: test
+Email: test@example.com
 Password: password
