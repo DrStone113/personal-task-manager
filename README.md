@@ -39,7 +39,7 @@ The project follows a clear separation of concerns:
   - `dashboard_functions.js`: Helper functions
 
 - `sql/`: Database definition
-  - `combined_project.sql`: Complete database schema and initial data
+  - `task_manager.sql`: Complete database schema and initial data
 
 ## Installation
 
