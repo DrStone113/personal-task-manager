@@ -7,13 +7,22 @@ include './php/manage_categories_func.php'
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Categories</title>
+    <title>Planex - Manage Categories</title>
+    <link rel="icon" type="image/x-icon" href="./img/logo.png">
+    <script src="./js/categories.js?v=<?= time() ?>" defer></script>
+    <script src="./js/dashboard.js?v=<?= time() ?>" defer></script>
     <link rel="stylesheet" href="./css/dashboard.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="./css/categories.css?v=<?php echo time(); ?>"> <!-- Include new CSS file -->
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
 <body>
-    <?php include './php/sidebar.php'; ?>
+<?php 
+    if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin') {
+        include './php/sidebar_admin.php';
+    } else {
+        include './php/sidebar.php';
+    }
+    ?>
 
     <section class="home">
         <div class="text">Manage Categories</div>
@@ -103,34 +112,6 @@ include './php/manage_categories_func.php'
             </form>
         </div>
     </div>
-
-    <script>
-        function editCategory(category) {
-            document.getElementById('edit_category_id').value = category.id;
-            document.getElementById('edit_category_name').value = category.category_name;
-            document.getElementById('edit_color').value = category.color;
-            document.getElementById('editModal').style.display = 'block';
-        }
-
-        function closeModal() {
-            document.getElementById('editModal').style.display = 'none';
-        }
-
-        // Close modal when clicking outside
-        window.onclick = function(event) {
-            const modal = document.getElementById('editModal');
-            if (event.target == modal) {
-                closeModal();
-            }
-        }
-
-        // Toggle sidebar functionality
-        const toggleButton = document.querySelector('.toggle');
-        const sidebar = document.querySelector('.sidebar');
-        toggleButton.addEventListener('click', () => {
-            sidebar.classList.toggle('close');
-        });
-    </script>
 </body>
 </html>
 

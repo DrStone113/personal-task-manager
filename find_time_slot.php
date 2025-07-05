@@ -4,16 +4,28 @@ include './php/find_free_time_func.php';
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Find Free Time Slot</title>
+    <title>Planex - Find Free Time Slot</title>
+    <link rel="icon" type="image/x-icon" href="./img/logo.png">
+    <!-- CSS -->
+    <link rel="stylesheet" href="./css/findfreetime.css?php echo time(); ?>">
+    <script src="./js/dashboard.js?v=<?= time() ?>" defer></script>
     <script src="./js/start_time.js?v=<?= time() ?>" defer></script>
     <link rel="stylesheet" href="./css/dashboard.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
+
 <body>
-    <?php include './php/sidebar.php'; ?>
+    <?php
+    if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin') {
+        include './php/sidebar_admin.php';
+    } else {
+        include './php/sidebar.php';
+    }
+    ?>
 
     <section class="home">
         <div class="text">Find Free Time Slot</div>
@@ -48,11 +60,11 @@ include './php/find_free_time_func.php';
                                 <div class="slot-card">
                                     <div class="slot-time">
                                         <i class='bx bx-time'></i>
-                                        <?= $slot['start']->format('D, M j, Y g:i A') ?> - 
+                                        <?= $slot['start']->format('D, M j, Y g:i A') ?> -
                                         <?= $slot['end']->format('g:i A') ?>
                                     </div>
-                                    <a href="add_task.php?datetime=<?= urlencode($slot['start']->format('Y-m-d\TH:i')) ?>&duration=<?= $duration ?>" 
-                                       class="btn btn-secondary">
+                                    <a href="add_task.php?datetime=<?= urlencode($slot['start']->format('Y-m-d\TH:i')) ?>&duration=<?= $duration ?>"
+                                        class="btn btn-secondary">
                                         Schedule Task
                                     </a>
                                 </div>
@@ -63,62 +75,8 @@ include './php/find_free_time_func.php';
             <?php endif; ?>
         </div>
     </section>
-
-    <style>
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        .search-form {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        .form-control {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-        .slots-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
-        }
-        .slot-card {
-            background: white;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .slot-time {
-            font-size: 1.1em;
-            color: var(--text-color);
-        }
-        .slot-time i {
-            margin-right: 5px;
-            color: var(--primary-color);
-        }
-        .results h3 {
-            margin: 20px 0;
-            color: var(--text-color);
-        }
-    </style>
-
-    <script src="./js/dashboard.js"></script>
-    <script src="./js/notifications.js"></script>
 </body>
+
 </html>
 
 <?php

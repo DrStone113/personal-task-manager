@@ -11,13 +11,20 @@ include './php/edit_task_func.php';
     <link rel="stylesheet" href="./css/dashboard.css">
     <link rel="stylesheet" href="./css/task_form.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-    <title>Edit Task</title>
+    <title>Planex - Edit Task</title>
+    <link rel="icon" type="image/x-icon" href="./img/logo.png">
     <script src="./js/dashboard.js" defer></script>
     <script src="./js/notifications.js" defer></script>
 </head>
 
 <body>
-    <?php include './php/sidebar.php'; ?>
+    <?php
+    if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin') {
+        include './php/sidebar_admin.php';
+    } else {
+        include './php/sidebar.php';
+    }
+    ?>
 
     <section class="home">
         <div class="text">Edit Task</div>
@@ -82,11 +89,6 @@ include './php/edit_task_func.php';
                     <label for="duration">Duration (minutes):</label>
                     <input type="number" name="duration" value="<?= $task['duration'] ?>"
                         min="1" required class="form-control">
-                </div>
-
-                <div class="form-group">
-                    <label for="tags">Tags (comma separated):</label>
-                    <input type="text" name="tags" value="<?= htmlspecialchars($task['tags']) ?>" class="form-control">
                 </div>
 
                 <div class="form-actions">

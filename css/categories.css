@@ -1,3 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=K2D:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800&family=Readex+Pro:wght@160..700&display=swap');
+
+*{
+    font-family: 'Readex Pro', 'K2D';
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 /* Categories Page Styles */
 .category-grid {
     display: grid;
@@ -52,9 +61,11 @@
 }
 
 .message {
+    margin-left: 40px;
     padding: 10px;
     border-radius: 4px;
     margin-bottom: 15px;
+    max-width: 30%;
 }
 
 .success {
@@ -80,13 +91,13 @@
 }
 
 .add-category {
-    background: #37b24d;
-    color: white;
+    background: white;
+    color: black;
     padding: 8px 16px;
-    border-radius: 4px;
+    border-radius: 8px;
     text-decoration: none;
     margin-left: 40px;
-    border: none;
+    border: solid 1px black;
 }
 
 .btn-icon {
@@ -138,10 +149,6 @@
 }
 
 /* Home section spacing (for sidebar) */
-.home {
-    transition: padding-left 0.3s ease;
-}
-
 .sidebar.open ~ .home {
     padding-left: 250px; /* Width of the opened sidebar */
 }

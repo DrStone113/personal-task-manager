@@ -13,6 +13,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         die("All fields are required.");
     }
 
+    if ($username === 'admin') {
+        die("The username 'admin' is not allowed.");
+    }
+
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         die("Invalid email format.");
     }
@@ -47,4 +51,3 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $stmt->close();
     $conn->close();
 }
-?>

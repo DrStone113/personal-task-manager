@@ -4,40 +4,131 @@ include './php/dashboard_func.php';
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Task Manager Dashboard</title>
-    
+    <title>Planex - Task Manager</title>
+    <link rel="icon" type="image/x-icon" href="./img/logo.png">
+
     <!-- CSS -->
     <link rel="stylesheet" href="./css/dashboard.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="./css/dashboard_components.css?v=<?php echo time(); ?>">
-    <link rel="stylesheet" href="./css/gantt.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="./css/calendar.css?v=<?php echo time(); ?>">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-    
-    <!-- Calendar & Gantt -->
-    <link href='https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.8/main.min.css' rel='stylesheet' />
-    <link href='https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@6.1.8/main.min.css' rel='stylesheet' />
-    <link href='https://cdn.jsdelivr.net/npm/@fullcalendar/timeline@6.1.8/main.min.css' rel='stylesheet' />
-    <link href='https://cdn.jsdelivr.net/npm/@fullcalendar/resource-timeline@6.1.8/main.min.css' rel='stylesheet' />
-    <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.8/main.min.js'></script>
-    <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@6.1.8/main.min.js'></script>
-    <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/timeline@6.1.8/main.min.js'></script>
-    <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/resource-timeline@6.1.8/main.min.js'></script>
-    <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/resource@6.1.8/main.min.js'></script>
-    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <!-- JavaScript -->
-    <script src="./js/notifications.js?v=<?= time() ?>" defer></script>
-    <script src="./js/dashboard_functions.js?v=<?= time() ?>" defer></script>
     <script src="./js/dashboard.js?v=<?= time() ?>" defer></script>
+    <script src="./js/dashboard_func.js?v=<?= time() ?>" defer></script>
+    <script src="./js/calendar.js?v=<?= time() ?>" defer></script>
 </head>
 
 <body>
-<?php include './php/sidebar.php'; ?>
+    <?php
+    if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin') {
+        include './php/sidebar_admin.php';
+    } else {
+        include './php/sidebar.php';
+    }
+    ?>
 
     <section class="home">
         <div class="text">Dashboard</div>
-        
+
+        <!-- Calendar and Events Section -->
+        <div class="calendar-container">
+            <div class="container">
+                <div class="left">
+                    <div class="calendar">
+                        <div class="month">
+                            <i class="fas fa-angle-left prev"></i>
+                            <div class="date">december 2015</div>
+                            <i class="fas fa-angle-right next"></i>
+                        </div>
+                        <div class="weekdays">
+                            <div>Sun</div>
+                            <div>Mon</div>
+                            <div>Tue</div>
+                            <div>Wed</div>
+                            <div>Thu</div>
+                            <div>Fri</div>
+                            <div>Sat</div>
+                        </div>
+                        <div class="days">
+                            <?php
+                            // Loop through the days of the month
+                            $startDate = new DateTime('first day of this month');
+                            $endDate = new DateTime('last day of this month');
+                            $currentDate = clone $startDate;
+
+                            while ($currentDate <= $endDate) {
+                                $day = $currentDate->format('d');
+                                $month = $currentDate->format('m');
+                                $year = $currentDate->format('Y');
+
+                                // Check if there are tasks for this date
+                                $tasksForDate = [];
+                                $result->data_seek(0); // Reset result pointer
+                                while ($task = $result->fetch_assoc()) {
+                                    $taskDate = new DateTime($task['start_time']);
+                                    if ($taskDate->format('Y-m-d') === $currentDate->format('Y-m-d')) {
+                                        $tasksForDate[] = $task;
+                                    }
+                                }
+
+                                echo "<div class='day' data-date='{$year}-{$month}-{$day}'>";
+                                echo "<div class='date'>{$day}</div>";
+
+                                // Display tasks for this date
+                                foreach ($tasksForDate as $task) {
+                                    echo "<div class='task' style='background-color: {$task['color']};'>{$task['title']}</div>";
+                                }
+
+                                echo "</div>"; // Close day div
+                                $currentDate->modify('+1 day');
+                            }
+                            ?>
+                        </div>
+                        <div class="goto-today">
+                            <div class="goto">
+                                <input type="text" placeholder="mm/yyyy" class="date-input" />
+                                <button class="goto-btn">Go</button>
+                            </div>
+                            <button class="today-btn">Today</button>
+                        </div>
+                    </div>
+                    <h3>Tasks for the Month</h3>
+                    <div class="monthly-tasks">
+                        <div class="task-list">
+                            <?php
+                            $result->data_seek(0);
+                            while ($task = $result->fetch_assoc()):
+                                $start_timeDate = new DateTime($task['start_time']);
+                                $taskDate = $start_timeDate->format('Y-m-d');
+                                echo "<div class='task' style='background-color: {$task['color']};'>";
+                                echo "<strong>{$task['title']}</strong><br>";
+                                echo "Start: {$start_timeDate->format('d M, Y H:i')}<br>";
+                                echo "Duration: {$task['duration']} mins";
+                                echo "</div>";
+                            endwhile;
+                            ?>
+                        </div>
+                    </div>
+                </div>
+                <div class="right">
+                    <div class="today-date">
+                        <div class="event-day">wed</div>
+                        <div class="event-date">12th december 2022</div>
+                    </div>
+                    <h3>Tasks for Selected Date:</h3>
+                    <div class="daily-events">
+                        <div class="events-list"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text">Upcoming Tasks</div>
         <div class="controls">
             <div class="filters">
                 <select id="categoryFilter" onchange="filterTasks()">
@@ -68,97 +159,63 @@ include './php/dashboard_func.php';
             </div>
         </div>
 
-        <div id="calendar-view" class="view active"></div>
-        <div id="gantt-view" class="view"></div>
-        
         <div id="task-list">
-            <h3 class="text">Upcoming Tasks</h3>
-            <div class="task-grid">
-                <?php 
-                $result->data_seek(0);
-                while ($task = $result->fetch_assoc()): 
-                    $start_timeDate = new DateTime($task['start_time']);
-                    $now = new DateTime();
-                    $interval = $now->diff($start_timeDate);
-                    $isUrgent = $interval->days <= 2 && $task['status'] !== 'Completed';
-                ?>
-                    <div class="task-card <?= $isUrgent ? 'urgent' : '' ?>" data-category="<?= $task['category_id'] ?>" data-priority="<?= $task['priority'] ?>" data-status="<?= $task['status'] ?>">
-                        <h4><?= htmlspecialchars($task['title']) ?></h4>
-                        <p class="description"><?= htmlspecialchars($task['description']) ?></p>
-                        <div class="task-meta">
-                            <span class="priority <?= strtolower($task['priority']) ?>"><?= $task['priority'] ?></span>
-                            <span class="status"><?= $task['status'] ?></span>
-                            <span class="category" style="background: <?= $task['color'] ?? '#808080' ?>20; color: <?= $task['color'] ?? '#808080' ?>">
-                                <?= $task['category_name'] ?? 'Uncategorized' ?>
-                            </span>
-                        </div>
-                        <div class="task-time">
-                            <i class='bx bx-time'></i> <?= $task['duration'] ?> mins
-                            <br>
-<i class='bx bx-calendar'></i> <?= $start_timeDate->format('M d, Y H:i') ?>
-                        </div>
-                        <div class="task-actions">
-                            <a href="edit_task.php?id=<?= $task['id'] ?>" class="btn-edit">
-                                <i class='bx bx-edit'></i>
-                            </a>
-                            <a href="php/delete_task.php?id=<?= $task['id'] ?>" class="btn-delete" onclick="return confirm('Are you sure?')">
-                                <i class='bx bx-trash'></i>
-                            </a>
-                        </div>
-                    </div>
-                <?php endwhile; ?>
+            <div id="task-grid" class="task-grid">
+            </div>
+            <div id="pagination" class="pagination">
             </div>
         </div>
+        </div>
     </section>
-
-    <script>
-        // Initialize calendar and gantt event data
-        window.calendarEvents = <?php
-            $result->data_seek(0);
-            $tasks = [];
-            while ($task = $result->fetch_assoc()) {
-                $start_time = new DateTime($task['start_time']);
-                $endTime = clone $start_time;
-                $endTime->modify('+' . $task['duration'] . ' minutes');
-                
-                $tasks[] = [
-                    'id' => $task['id'],
-                    'title' => addslashes($task['title']),
-                    'start' => $start_time->format('Y-m-d\TH:i:s'),
-                    'end' => $endTime->format('Y-m-d\TH:i:s'),
-                    'backgroundColor' => "getPriorityColor('{$task['priority']}')",
-                    'extendedProps' => [
-                        'description' => addslashes($task['description']),
-                        'priority' => $task['priority'],
-                        'status' => $task['status'],
-                        'category' => addslashes($task['category_name'] ?? 'Uncategorized')
-                    ]
-                ];
-            }
-            echo json_encode($tasks);
-        ?>;
-
-        window.ganttEvents = <?php
-            $result->data_seek(0);
-            $ganttTasks = [];
-            while ($task = $result->fetch_assoc()) {
-                $start_time = new DateTime($task['start_time']);
-                $endTime = clone $start_time;
-                $endTime->modify('+' . $task['duration'] . ' minutes');
-                
-                $ganttTasks[] = [
-                    'id' => $task['id'],
-                    'resourceId' => strtolower($task['priority']),
-                    'title' => addslashes($task['title']),
-                    'start' => $start_time->format('Y-m-d\TH:i:s'),
-                    'end' => $endTime->format('Y-m-d\TH:i:s'),
-                    'backgroundColor' => "getPriorityColor('{$task['priority']}')"
-                ];
-            }
-            echo json_encode($ganttTasks);
-        ?>;
-    </script>
 </body>
+<script type="module">
+    import {
+        initializeApp
+    } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+    import {
+        getMessaging,
+        getToken
+    } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-messaging.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyDZTzEYeJN-pSgypLMFMDzvr6HMrZs61Sk",
+        authDomain: "task-manager-c5c37.firebaseapp.com",
+        projectId: "task-manager-c5c37",
+        storageBucket: "task-manager-c5c37.firebasestorage.app",
+        messagingSenderId: "575189565238",
+        appId: "1:575189565238:web:910f22e5e1510ca3f63d97",
+        measurementId: "G-8B9N1GED18"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const messaging = getMessaging(app);
+
+    navigator.serviceWorker.register("./js/sw.js?v=<?= time() ?>").then(registration => {
+        getToken(messaging, {
+            serviceWorkerRegistration: registration,
+            vapidKey: 'BD1W3Nt3_QKTQRIVgKxmU82UpdfaQ1gIVMZGvuD5WEt77rXdb20C2juLdrhwPYarY7K8lk23VFlXqPan6NLQoF8'
+        }).then((currentToken) => {
+            if (currentToken) {
+                console.log("Token is: " + currentToken);
+                // Gửi token đến server
+                fetch('./php/save_token.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: 'token=' + encodeURIComponent(currentToken),
+                    }).then(response => response.text())
+                    .then(data => console.log("Server response: " + data))
+                    .catch(error => console.error("Error sending token: ", error));
+            } else {
+                console.log('No registration token available. Request permission to generate one.');
+            }
+        }).catch((err) => {
+            console.log('An error occurred while retrieving token. ', err);
+        });
+    });
+</script>
+
 </html>
 
 <?php

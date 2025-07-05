@@ -3,7 +3,7 @@
 $current_page = basename($_SERVER['PHP_SELF']);
 ?>
 
-<nav class="sidebar close">
+<nav class="sidebar">
     <header>
         <div class="image-text">
             <span class="image">
@@ -21,10 +21,6 @@ $current_page = basename($_SERVER['PHP_SELF']);
 
     <div class="menu-bar">
         <div class="menu">
-            <li class="search-box">
-                <i class='bx bx-search icon'></i>
-                <input type="search" placeholder="Search">
-            </li>
             <ul class="menu-links">
                 <li class="nav-link <?= $current_page === 'dashboard.php' ? 'active' : '' ?>">
                     <a href="./dashboard.php" <?= $current_page === 'dashboard.php' ? 'onclick="return false"' : '' ?>>
@@ -33,14 +29,13 @@ $current_page = basename($_SERVER['PHP_SELF']);
                     </a>
                 </li>
                 <li class="nav-link <?= $current_page === 'notifications.php' ? 'active' : '' ?>">
-                    <a href="notifications.php" <?= $current_page === 'notifications.php' ? 'onclick="return false"' : '' ?>>
+                    <a href="./notifications.php" <?= $current_page === 'notifications.php' ? 'onclick="return false"' : '' ?>>
                         <i class='bx bx-bell icon'></i>
                         <span class="text nav-text">Notifications</span>
-                        <span id="notificationBadge" class="notification-badge"></span>
                     </a>
                 </li>
                 <li class="nav-link <?= $current_page === 'manage_categories.php' ? 'active' : '' ?>">
-                    <a href="manage_categories.php" <?= $current_page === 'manage_categories.php' ? 'onclick="return false"' : '' ?>>
+                    <a href="./manage_categories.php" <?= $current_page === 'manage_categories.php' ? 'onclick="return false"' : '' ?>>
                         <i class='bx bx-category-alt icon'></i>
                         <span class="text nav-text">Categories</span>
                     </a>
@@ -57,3 +52,12 @@ $current_page = basename($_SERVER['PHP_SELF']);
         </div>
     </div>
 </nav>
+<script>
+    const sidebar = document.querySelector(".sidebar");
+    const sidebarState = localStorage.getItem("sidebarState");
+    if (sidebarState === "close") {
+        sidebar.classList.add("close");
+    } else {
+        sidebar.classList.remove("close");
+    }
+</script>

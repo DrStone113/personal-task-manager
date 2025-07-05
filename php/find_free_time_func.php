@@ -31,8 +31,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $busy_slots[] = ['start' => $start, 'end' => $end];
     }
 
-    // Define working hours (9 AM to 5 PM)
-    $work_start = 9;
+    // Define working hours (7 AM to 5 PM)
+    $work_start = 7;
     $work_end = 17;
 
     // Find available slots

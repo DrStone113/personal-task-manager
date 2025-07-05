@@ -4,10 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Personal</title>
+    <title>Planex - Task Manager</title>
+    <link rel="icon" type="image/x-icon" href="./img/logo.png">
     <!-- main css -->
-    <link rel="stylesheet" href="./css/main.css?v=<?php echo time(); ?>">
-    <script src="./js/main.js" defer></script>
+    <link rel="stylesheet" href="./css/index.css?v=<?php echo time(); ?>">
+    <script src="./js/index.js" defer></script>
     <!-- boxicons -->
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <!-- font awsome -->
@@ -61,14 +62,11 @@
                     <form action="./php/login.php" method="POST">
                         <h1>LOGIN</h1>
                         <div class="input_box">
-                            <input type="email" name="email" placeholder="Email" required>
-                            <i class='bx bx-envelope'></i>
+                            <input type="text" name="username" placeholder="Username" required pattern="[A-Za-z0-9]+">
+                            <i class='bx bx-user'></i>
                         </div>
                         <div class="input_box">
                             <input type="password" name="password" placeholder="Password" required>
-                        </div>
-                        <div class="forgot_link">
-                            <a href="#">Forgot password?</a>
                         </div>
                         <button type="submit" class="login_btn">Login</button>
                         <div class="signup_link">

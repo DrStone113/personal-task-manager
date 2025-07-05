@@ -1,5 +1,18 @@
 <?php
-include './php/notifications_func.php'; // Ensure this file is included to fetch settings and upcoming deadlines
+include './php/connect.php'; // Kết nối cơ sở dữ liệu
+include './php/auth_check.php'; // Kiểm tra đăng nhập
+
+$user_id = $_SESSION['user_id'];
+
+$update_stmt = $conn->prepare("UPDATE notifications SET is_read = 1 WHERE user_id = ? AND is_read = 0");
+$update_stmt->bind_param("i", $user_id);
+$update_stmt->execute();
+$update_stmt->close();
+// Lấy danh sách thông báo
+$stmt = $conn->prepare("SELECT * FROM notifications WHERE user_id = ? ORDER BY sent_at DESC");
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$result = $stmt->get_result();
 ?>
 
 <!DOCTYPE html>
@@ -7,61 +20,38 @@ include './php/notifications_func.php'; // Ensure this file is included to fetch
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notifications - Task Manager</title>
+    <title>Planex - Notifications</title>
+    <link rel="icon" type="image/x-icon" href="./img/logo.png">
     <link rel="stylesheet" href="./css/dashboard.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="./css/notifications.css?v=<?php echo time(); ?>">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <script src="./js/dashboard.js?v=<?= time() ?>" defer></script>
-    <script src="./js/notifications.js" defer></script>
 </head>
 <body>
-    <?php include './php/sidebar.php'; ?>
+    <?php
+    if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin') {
+        include './php/sidebar_admin.php';
+    } else {
+        include './php/sidebar.php';
+    }
+    ?>
 
-    <section class="home"> <!-- Added padding for spacing -->
+    <section class="home">
         <div class="text">Notifications</div>
-        
-        <div class="container">
-            <div class="notification-settings">
-                <h3>Notification Settings</h3>
-                <form method="POST" action="" class="settings-form">
-                    <label>
-                        <input type="checkbox" name="notify_before_start_time" 
-                            <?= isset($settings) && $settings['notify_before_start_time'] ? 'checked' : '' ?>>
-                        Notify before task start_time
-                    </label>
-                    <label>
-                        <input type="checkbox" name="notify_on_assignment" 
-                            <?= isset($settings) && $settings['notify_on_assignment'] ? 'checked' : '' ?>>
-                        Notify when tasks are assigned
-                    </label>
-                    <label>
-                        <input type="checkbox" name="notify_on_update" 
-                            <?= isset($settings) && $settings['notify_on_update'] ? 'checked' : '' ?>>
-                        Notify on task updates
-                    </label>
-                    <label>
-                        <input type="checkbox" name="email_notifications" 
-                            <?= isset($settings) && $settings['email_notifications'] ? 'checked' : '' ?>>
-                        Enable email notifications
-                    </label>
-                    <button type="submit" name="update_settings" class="btn btn-primary">
-                        Save Settings
-                    </button>
-                </form>
-            </div>
-        </div>
-        <div class="upcoming-deadlines">
-            <h3 class="text">Upcoming Deadlines</h3>
-            <ul>
-                <?php if (isset($upcoming_deadlines)): ?>
-                    <?php while ($task = $upcoming_deadlines->fetch_assoc()): ?>
-                        <li><?php echo $task['task_name']; ?> - Starting at <?php echo $task['start_time']; ?></li>
-                    <?php endwhile; ?>
-                <?php else: ?>
-                    <li>No upcoming deadlines.</li>
-                <?php endif; ?>
-            </ul>
+        <div class="notification-list">
+            <?php while ($notification = $result->fetch_assoc()): ?>
+                <div class="notification-card <?php echo $notification['is_read'] ? 'read' : 'unread'; ?>">
+                    <h4><?php echo htmlspecialchars($notification['title']); ?></h4>
+                    <p><?php echo htmlspecialchars($notification['body']); ?></p>
+                    <span class="sent-time"><?php echo $notification['sent_at']; ?></span>
+                </div>
+            <?php endwhile; ?>
         </div>
     </section>
 </body>
 </html>
+
+<?php
+$stmt->close();
+$conn->close();
+?>

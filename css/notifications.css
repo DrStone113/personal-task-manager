@@ -1,147 +1,62 @@
-/* Notifications Page Styles */
-.container {
-    max-width: 1200px;
+/* Notification List Container */
+.notification-list {
+    max-width: 90%;
+    margin: 20px 0 0 25px;
+    padding: 0 20px;
 }
 
-.notification-settings {
-    background-color: var(--sidebar-color);
-    border-radius: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+/* Notification Card */
+.notification-card {
+    background: #fff;
+    border-radius: 8px;
     padding: 20px;
-    margin: 40px;
-}
-
-.settings-form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.settings-form label {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 1rem;
-}
-
-.settings-form input[type="checkbox"] {
-    width: 18px;
-    height: 18px;
-}
-
-.upcoming-tasks {
-    margin-top: 30px;
-}
-
-.task-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 20px;
-    margin-top: 20px;
-}
-
-.task-card {
-    background-color: var(--sidebar-color);
-    border-radius: 10px;
+    margin-bottom: 15px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    transition: transform 0.3s ease;
+    border-left: 4px solid transparent;
+    transition: all 0.3s ease;
 }
 
-.task-card:hover {
-    transform: translateY(-5px);
+/* Unread Notification */
+.notification-card.unread {
+    border-left-color: #4e73df;
+    background-color: #f8f9fc;
 }
 
-.task-card.urgent {
-    border-left: 4px solid #ff6b6b;
+/* Notification Title */
+.notification-card h4 {
+    color: #333;
+    margin: 0 0 10px 0;
+    font-size: 1.1rem;
 }
 
-.task-meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin: 10px 0;
-}
-
-.priority {
-    padding: 4px 10px;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: bold;
-}
-
-.priority.high {
-    background-color: rgba(255, 107, 107, 0.2);
-    color: #ff6b6b;
-}
-
-.priority.medium {
-    background-color: rgba(255, 159, 67, 0.2);
-    color: #ff9f43;
-}
-
-.priority.low {
-    background-color: rgba(46, 213, 115, 0.2);
-    color: #2ed573;
-}
-
-.category {
-    padding: 4px 10px;
-    border-radius: 20px;
-    font-size: 0.8rem;
-}
-
-.task-time {
-    margin: 15px 0;
+/* Notification Body */
+.notification-card p {
     color: #666;
-    font-size: 0.9rem;
+    margin: 0 0 10px 0;
     line-height: 1.5;
 }
 
-.task-actions {
-    display: flex;
-    gap: 10px;
-    margin-top: 15px;
+/* Sent Time */
+.notification-card .sent-time {
+    color: #999;
+    font-size: 0.8rem;
+    display: block;
+    text-align: right;
 }
 
-.btn-edit, .btn-complete {
-    padding: 8px 15px;
-    border-radius: 5px;
-    font-size: 0.9rem;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    border: none;
+/* Hover Effects */
+.notification-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.btn-edit {
-    background-color: #4dabf7;
-    color: white;
-    text-decoration: none;
-}
-
-.btn-complete {
-    background-color: #2ed573;
-    color: white;
-}
-
-/* Home section spacing (for sidebar) */
-.home {
-    transition: 0.3s ease;
-}
-
-.sidebar.open ~ .home {
-    padding-left: 250px; /* Width of the opened sidebar */
-}
-
-/* Responsive styles */
+/* Responsive Design */
 @media (max-width: 768px) {
-    .task-grid {
-        grid-template-columns: 1fr;
+    .notification-list {
+        padding: 0 10px;
     }
     
-    .sidebar.open ~ .home {
-        padding-left: 250px;
+    .notification-card {
+        padding: 15px;
     }
 }
